@@ -58,4 +58,9 @@ class vectorstore:
             results.append({"index": idx, "distance": dist, "metadata": meta})
         return results
     
+    def query(self, query_text: str, top_k: int = 5):
+        print(f"[INFO] Querying vector store for: '{query_text}'")
+        query_emb = self.model.encode([query_text]).astype('float32')
+        return self.search(query_emb, top_k=top_k)
+    
 
