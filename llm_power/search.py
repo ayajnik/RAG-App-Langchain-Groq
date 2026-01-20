@@ -44,15 +44,15 @@ class RAGSearch:
             return summary.content
         except Exception as e:
             if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e) or "rate" in str(e).lower():
-                print(f"⚠️ Gemini rate limit exceeded: {e}")
-                print("🔄 Switching to Groq...")
+                print(f" Gemini rate limit exceeded: {e}")
+                print("Switching to Groq...")
                 self.use_groq = True
                 try:
                     summary = self.groq_llm.invoke(prompt)
                     return summary.content
                 except Exception as groq_error:
-                    print(f"❌ Groq also failed: {groq_error}")
+                    print(f"Groq also failed: {groq_error}")
                     raise
             else:
-                print(f"❌ Gemini error: {e}")
+                print(f"Gemini error: {e}")
                 raise
