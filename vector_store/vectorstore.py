@@ -17,6 +17,13 @@ class vectorstore:
         if not os.path.exists(self.persist_dir):
             os.makedirs(self.persist_dir)
 
+    def build_from_documents(self, chunks, embeddings: np.ndarray):
+        metadatas = [{"text":chunk.page_content} for chunk in chunks]
+        print("Building vector store from documents...")
+        self.add_embeddings(embeddings, metadatas)
+        print("Vector store built successfully.")
+        self.save()
+
     def add_embeddings(self, embeddings: np.ndarray, metadatas: List[Any]):
         dim = embeddings.shape[1]
         if self.index is None:
@@ -42,11 +49,6 @@ class vectorstore:
             self.metadata = pickle.load(f)
         print(f"[INFO] Loaded Faiss index and metadata from {self.persist_dir}")
 
-
-    def build_from_documents(self, chunks, embeddings: np.ndarray):
-        metadatas = [{"text":chunk.page_content} for chunk in chunks]
-        self.add_embeddings(embeddings, metadatas)
-        self.save()
         
     def search(self, query_embedding: np.ndarray, top_k: int = 5):
         D, I = self.index.search(query_embedding, top_k)
